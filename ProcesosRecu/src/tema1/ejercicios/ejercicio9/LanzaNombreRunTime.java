@@ -13,6 +13,7 @@ public class LanzaNombreRunTime {
             InputStream is = p.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
+            OutputStream os = p.getOutputStream();
             String linea = br.readLine();
             System.out.println(linea);  
         }catch (IOException e){

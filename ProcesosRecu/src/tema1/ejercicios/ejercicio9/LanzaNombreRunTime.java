@@ -14,7 +14,7 @@ public class LanzaNombreRunTime {
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String linea = br.readLine();
-            System.out.println(linea);  
+            System.out.println(linea);      
         }catch (IOException e){
             System.err.println("Ha habido un error al lanzar el proceso");
             e.printStackTrace();

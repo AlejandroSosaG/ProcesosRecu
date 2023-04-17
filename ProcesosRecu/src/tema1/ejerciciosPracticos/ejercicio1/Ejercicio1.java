@@ -1,57 +1,61 @@
 package tema1.ejerciciosPracticos.ejercicio1;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Ejercicio1 {
-
+    static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-        int opc = menu();
-
+        menu(); // Llamamos al método menu.
+       sc.close(); // Cerramos el escaner.
+    }
+    public static void menu() {
+        int opc; // En opc guardaremos la opción seleccionada por el usuario.
+        String ruta; // En ruta se guardará la ruta a utilizar en las distintas opciones.
+        String[] comando; // En comando guardaremos el tipo de archivo.
+        // Mostramos el menú con las diversas opciones.
+        System.out.println("Elija qué comando desea ejecutar:");
+        System.out.println("1. Crear carpeta");
+        System.out.println("2. Crear fichero");
+        System.out.println("3. Mostrar contenido del directorio");
+        // Introducimos la opción seleccionada en opc.
+        opc = sc.nextInt();
+        // Pedimos la ruta.
+        System.out.println("Introduzca la ruta:");
+        // Introducimos el valor en la variable ruta.
+        ruta = sc.next();
         // Según la opción introducida debemos lanzar un proceso u otro.
-        // Todos los procesos son comandos de Windows, por lo que deben comenzar con cmd
-
         switch (opc) {
-            // Si elige crear una carpeta, debo pedirle también la ruta donde quiere crearla
-            // y el nombre de la carpeta
+            // Si elige crear una carpeta, debo pedirle también el nombre de la carpeta a crear.
             case 1:
-                creaCarpeta();
+                System.out.println("Introduzca el nombre de la carpeta que quiere crear");
+                String carpeta = sc.next();
+                comando = new String[]{"cmd", "/C", "md", ruta + carpeta};
+                crear(comando); // Llamamos al metodo crear.
                 break;
-            // Si elige crear un fichero, debo pedirle también la ruta donde quiere crearlo
-            // y el nombre del fichero
+            // Si elige crear un fichero, debo pedirle también el nombre del fichero a crear.
             case 2:
-                creaFichero();
+                System.out.println("Introduzca el nombre del fichero que quiere crear");
+                String fichero = sc.next();
+                comando = new String[]{"cmd", "/C", "type", "nul", ">", ruta + fichero};
+                crear(comando); // Llamamos al método crear.
                 break;
-            // Si elige mostrar un directorio, debo pedirle también la ruta del directorio a
-            // mostrar. Si lo deja vacío, debo mostrar el contenido del directorio actual
             case 3:
-                mostrar();
+                comando = new String[]{"cmd", "/C", "dir", ruta};
+                ProcessBuilder pb = new ProcessBuilder(comando);
+                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
             default:
                 System.out.println("La opción introducida no es correcta");
         }
     }
-
-    private static void mostrar() {
-    }
-
-    private static void creaFichero() {
-    }
-
-    private static void creaCarpeta() {
-    }
-
-    public static int menu() {
-        // En opc guardaremos la opción seleccionada por el usuario
-        int opc;
-        Scanner sc = new Scanner(System.in);
-        // Imprimimos el menú con las diversas opciones
-        System.out.println("Elija qué comando desea ejecutar:");
-        System.out.println("1. Crear carpeta");
-        System.out.println("2. Crear fichero");
-        System.out.println("3. Mostrar contenido del directorio");
-        // Leemos la opción de teclado
-        opc = sc.nextInt();
-        sc.close();
-        return opc;
+    public static void crear(String[] comando){
+        ProcessBuilder pb = new ProcessBuilder(comando);
+        pb.inheritIO();
+        try {
+            Process p = pb.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -40,19 +40,25 @@ public class Ejercicio1 {
                 comando = new String[]{"cmd", "/C", "type", "nul", ">", ruta + fichero};
                 crear(comando); // Llamamos al método crear.
                 break;
+                // Si elije mostrar contenido creamos la ruta que queremos utilizar y mostramos por
+                // pantalla el contenido del diretorio.
             case 3:
                 comando = new String[]{"cmd", "/C", "dir", ruta};
                 ProcessBuilder pb = new ProcessBuilder(comando);
                 pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 break;
+                // Si no elige una opción valida se lo hacemos saber.
             default:
                 System.out.println("La opción introducida no es correcta");
         }
     }
     public static void crear(String[] comando){
+        // Creamos el lanzador con el comando que le pasamos por pantalla.
         ProcessBuilder pb = new ProcessBuilder(comando);
+        // Le decimo que muestre la entrada, salida y error por pantalla.
         pb.inheritIO();
         try {
+            // Lanzamos el proceso.
             Process p = pb.start();
         } catch (IOException e) {
             e.printStackTrace();

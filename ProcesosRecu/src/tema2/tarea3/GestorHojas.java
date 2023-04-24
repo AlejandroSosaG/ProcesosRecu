@@ -15,9 +15,8 @@ public class GestorHojas extends Thread {
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
             GestorHojas gestor = new GestorHojas();
-            gestor.run();
+            gestor.start();
         }
-
     }
 }
     

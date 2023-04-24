@@ -5,7 +5,7 @@ public class HiloDurmiente extends Thread{
         for (int i = 0; i < 5; i++) {
             Thread hilo = new HiloDurmiente();
             hilo.setName("hilo " + (i+1));
-            hilo.run();
+            hilo.start();
         }
     }
     @Override

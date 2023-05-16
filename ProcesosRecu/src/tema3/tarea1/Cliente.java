@@ -6,10 +6,9 @@ import java.util.Scanner;
 
 public class Cliente {
     public static void main(String[] args) {
-        String ruta;
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduzca la ruta completa del fichero a leer");
-        ruta = sc.next();
+        String ruta = sc.next();
         InetAddress direccion;
         try {
             direccion = InetAddress.getLocalHost();

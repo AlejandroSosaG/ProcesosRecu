@@ -17,8 +17,10 @@ public class Servidor {
             OutputStream os = socketCliente.getOutputStream();
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
-            File archivo = new File (br.readLine());
+            String ruta = br.readLine();
+            File archivo = new File (ruta);
             FileReader fr = new FileReader (archivo);
+            br = new BufferedReader(fr);
             String linea;
             while ((linea = br.readLine())!=null) contenido += linea;
             System.out.println("Sevidor envia mensaje al cliente");

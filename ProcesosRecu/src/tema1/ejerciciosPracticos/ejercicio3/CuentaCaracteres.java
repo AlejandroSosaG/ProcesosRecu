@@ -2,7 +2,7 @@ package tema1.ejerciciosPracticos.ejercicio3;
 
 import java.io.*;
 public class CuentaCaracteres {
-    private final static String RUTA_FICHERO = "C:\\Users\\Usuario\\Documents\\ALEJANDRO\\2º CFGS\\SERVICIOS Y PROCESOS\\ProcesosRecu\\ProcesosRecu\\src\\tema1\\ejerciciosPracticos\\ejercicio3\\texto_largo.txt";
+    private final static String RUTA_FICHERO = ".\\ProcesosRecu\\ProcesosRecu\\src\\tema1\\ejerciciosPracticos\\ejercicio3\\texto_largo.txt";
     public static void main(String[] args) {
         try {
             // El carácter a contar lo tomo de la línea de argumentos.

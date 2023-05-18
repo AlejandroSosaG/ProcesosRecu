@@ -4,6 +4,8 @@ public class Libro {
 	// Creamos una lista de libros compartidos por los estudiantes.
 	public static boolean[] libros = new boolean[9];
 
+	public Libro() {}
+
 	/**
 	 * Método que se encarga de bloquear dos libros mientras se están usando.
 	 * @param libro1
@@ -29,6 +31,6 @@ public class Libro {
 	public synchronized void liberaLibros(int libro1, int libro2) {
 		libros[libro1] = false;
 		libros[libro2] = false;
-		this.notify();
+		this.notifyAll();
 	}
 }

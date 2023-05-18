@@ -25,30 +25,29 @@ public class Estudiante implements Runnable {
     @Override
     public void run() {
         try {
+            // Creamos un nuevo libro.
+            Libro libro = new Libro();
             // El alumno actual elige dos libros aleatorios.
             int libro1 = new Random().nextInt(9);
             int libro2 = new Random().nextInt(9);
             while (libro2 == libro1) {
                 libro2 = new Random().nextInt(9);
             }
-            // El alumno espera hasta que los libros estén disponibles.
+            // LLamamos al método reservaLibros de la clase Libro para usar 2 libros distintos.
             synchronized (o) {
-                while (libros[libro1] == true || libros[libro2] == true) {
-                    o.wait();
-                }
-                libros[libro1] = true;
-                libros[libro2] = true;
+                libro.reservaLibros(libro1, libro2);
             }
             // Se muestra por pantalla un mensaje con los libros reservados.
             System.out.println(Thread.currentThread().getName() + " tiene reservados los libros " + libro1 + " y " + libro2);
-            // Se pausa el hilo actual entre 
+            // Se pausa el hilo actual entre 3 y 5 segundos.
             Thread.sleep((long) (Math.random() * 5000 + 3000));
+            // Mostramos por pantalla un mensaje diciendo que el estudiante actual ha acabado.
             System.out.println(Thread.currentThread().getName() + " ha terminado de leer.");
+            // LLamamos al método liberaLibros de la clase Libro para liberar los 2 libros usados.
             synchronized (o) {
-                libros[libro1] = false;
-                libros[libro2] = false;
-                o.notify();
+                libro.liberaLibros(libro1, libro2);
             }
+            // Esperamos un segundo.
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();

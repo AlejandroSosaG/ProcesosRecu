@@ -6,16 +6,15 @@ import java.util.Scanner;
 
 public class Cliente {
     public static void main(String[] args) {
-        DatagramSocket socket;
         int puertoServidor = 42000;
-        // Creación de escaner
+        // Creación de escaner.
         Scanner sc = new Scanner(System.in);
         try {
-            // Obtener dirección IP local
+            // Obtenemos la dirección IP local
             InetAddress direccion = InetAddress.getLocalHost();
-            // Creación del socket
-            socket = new DatagramSocket();
-            boolean numeroAdivinado = false;
+            // Creación del socket.
+            DatagramSocket socket = new DatagramSocket();
+            boolean numeroAdivinado = false; // Esta variable
             while (!numeroAdivinado) {
                 System.out.println("Introduzca un número");
                 // Creación del mensaje

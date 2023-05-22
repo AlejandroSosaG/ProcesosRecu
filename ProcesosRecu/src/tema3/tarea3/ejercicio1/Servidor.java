@@ -5,11 +5,16 @@ import java.net.*;
 
 public class Servidor {
     public static void main(String[] args) {
-        DatagramSocket socket;
         try {
-            socket = new DatagramSocket(42000);
+            // Creación de socket.
+            DatagramSocket socket = new DatagramSocket(42000);
+            // Creamos un número aleatorio entre 0 y 100.
             int numSecreto = (int) (Math.random()*101);
             GestorProcesos gestor;
+            /**
+             * Mediante un bucle infinito crearemos un paquete para recibir el mensaje del cliente,
+             * crearemos un objeto de tipo GestorProcesos y lo lanzaremos.
+             */
             while (true){
                 System.out.println("Creación del array de bytes");
                 byte[] buffer = new byte[64];

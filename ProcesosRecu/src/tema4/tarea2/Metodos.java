@@ -6,30 +6,34 @@ import java.security.*;
 import java.util.*;
 public class Metodos {
     /**
-     * Genera la clave de cifrado y descifrado a partir de la contraseña del usuario.
+     * Generamos la clave de cifrado y descifrado a partir de la contraseña que se le pasa por parámetro.
+     * @return Devolvemos la clave.
      */
     public static Key obtenerClave(String contraseña){
-        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 3, "AES");
+        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 16, "AES");
         return clave;
     }
     /**
-     * Método que cifrará un mensaje introducido por el usuario. Para ello se recibe como parámetro un objeto
-     * de tipo Key con la contraseña. Una vez cifrado se escribe en un fichero.
+     * Método que cifra un mensaje introducido pasado por parámetro usando una clave tambien pasada como parámetro
      * @param clave
+     * @param texto
+     * @return Se devuelvve el texto pasado por parámetro cifrado.
      */
     public static String cifrar(Key clave, String texto){
+        String cifrado = "";
+        // Creación de escaner.
         Scanner sc = new Scanner(System.in);
         Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            // Iniciar el cifrado con la clave
+            // Iniciamos el cifrado con la clave.
             cipher.init(Cipher.ENCRYPT_MODE, clave);
-            //  Llevar a cabo el cifrado
+            // Ciframos el texto pasado por parámetro.
             byte[] cipherText = cipher.doFinal(texto.getBytes());
-            // Se escribe en el fichero
-            String cifrado = Base64.getEncoder().encodeToString(cipherText);
+            // Pasamos el texto cifrado a tipo cadena.
+            cifrado = Base64.getEncoder().encodeToString(cipherText);
+            // Cerramos el escaner.
             sc.close();
-            return cifrado;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {
@@ -40,35 +44,43 @@ public class Metodos {
             throw new RuntimeException(e);
         } catch (InvalidKeyException e) {
             throw new RuntimeException(e);
+        }finally {
+            // Devolvemos el texto cifrado.
+            return cifrado;
         }
+
     }
     /**
-     * Método para descifrar, como el método cifrar se recibe un objeto Key con la clave. Luego se guarda en una
-     * variable el contenido del fichero.
+     * Método que se encarga de descifrar la cadena pasada por parámetro usando la clave también pasada.
      * @param clave
+     * @param texto
+     * @return Devolvemos el texto cifrado pasado por parámetro una vez descifrado.
      */
     public static String descifrar(Key clave, String texto){
-        // 2 - Crear un Cipher
+        String descifrado = "";
+        // Creación de un objeto tipo Cipher.
         Cipher cipher;
         try {
             cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            // Iniciar el descifrado con la clave
+            // Iniciamos el descifrado con la clave pasada por parámetro.
             cipher.init(Cipher.DECRYPT_MODE, clave);
-            // Llevar a cabo el descifrado
+            // Desciframos el texto.
             byte[] textoDescifrado = cipher.doFinal(Base64.getDecoder().decode(texto));
-            // Imprimimos el mensaje descifrado:
-            String descifrado = new String(textoDescifrado);
-            return descifrado;
+            // Pasamos el mensaje descifrado a tipo cadena.
+            descifrado = new String(textoDescifrado);
         } catch (NoSuchPaddingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (BadPaddingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }finally {
+            // Devolvemos el texto descifrado.
+            return descifrado;
         }
     }
 }

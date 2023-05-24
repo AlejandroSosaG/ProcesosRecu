@@ -10,9 +10,9 @@ public class Cliente {
         try {
             Scanner sc = new Scanner(System.in);
             InetAddress direccion = InetAddress.getLocalHost();
-            //Crear un socket de tipo cliente indicando IP y puerto del servidor
+            // Crear un socket de tipo cliente indicando IP y puerto del servidor
             Socket socket = new Socket(direccion, 42000);
-            //Abrir flujos de lectura y escritura
+            // Abrir flujos de lectura y escritura
             InputStream is = socket.getInputStream();
             OutputStream os = socket.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
@@ -24,10 +24,11 @@ public class Cliente {
             osw.write(web);
             bw.newLine();
             bw.flush();
-            //Intercambiamos datos con el servidor
+            // Intercambiamos datos con el servidor
             InputStreamReader ir = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(ir);
             System.out.println("El servidor envía el mensaje: " + br.readLine());
+            // Cerramos el escaner.
             sc.close();
             is.close();
             os.close();

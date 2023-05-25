@@ -10,14 +10,14 @@ public class Metodos {
      * @return Devolvemos la clave.
      */
     public static Key obtenerClave(String contraseña){
-        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 16, "AES");
+        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 4, "AES");
         return clave;
     }
     /**
      * Método que cifra un mensaje introducido pasado por parámetro usando una clave tambien pasada como parámetro
      * @param clave
      * @param texto
-     * @return Se devuelvve el texto pasado por parámetro cifrado.
+     * @return Se devuelve el texto pasado por parámetro cifrado.
      */
     public static String cifrar(Key clave, String texto){
         String cifrado = "";

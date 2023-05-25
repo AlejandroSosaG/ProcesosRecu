@@ -12,19 +12,32 @@ import java.security.spec.*;
 import java.util.*;
 
 public class Cifrado {
+    // Creamos dos cadenas estáticas que utilizaremos como claves.
     private static final String clavePublica = "ProcesosRecu/src/tema4/tarea3/clavePublica.key";
     private static final String clavePrivada = "ProcesosRecu/src/tema4/tarea3/clavePrivada.key";
     public static void main(String[] args) {
+        // Guardamos la devolución de generarClaves en el objeto claves.
         KeyPair claves = generarClaves();
+        // Llamamos al método guardarClaves pasándole claves por parámetro.
         guardarClaves(claves);
+        // Pedimos al usuario un mensaje para encriptar y desencriptar.
         System.out.println("Introduzca el mensaje");
         Scanner sc = new Scanner(System.in);
         String msg = sc.nextLine();
+        // Guardamos la devolución de cifrar en la variable msgCifrado.
         String msgCifrado = cifrar(msg);
+        // Mostramos por pantalla el mensaje encriptado.
         System.out.println(msgCifrado);
         System.out.println();
+        // Llamamos al método descifrar al que le pasamos msgCifrado como parámetro.
         descifrar(msgCifrado);
     }
+
+    /**
+     * Método que se encarga de cifrar el mensaje que le pasamos por parámetro.
+     * @param msg
+     * @return Devolvemos el mensaje cifrado.
+     */
     public static String cifrar(String msg) {
         PublicKey clavePublica = getClavePublica();
         byte[] mensajeCifrado = new byte[0];
@@ -49,8 +62,13 @@ public class Cifrado {
             return new String(mensajeCifrado);
         }
     }
+
+    /**
+     * Este método muestra por pantalla el mensaje que se pasa por parámetro una vez descodificado.
+     * @param msg
+     */
     public static void descifrar(String msg) {
-        // Tomamos la clave privada
+        // Creamos una clave privada.
         PrivateKey clavePrivada = getClavePrivada();
         try {
             Cipher cipher = Cipher.getInstance("RSA");
@@ -58,7 +76,7 @@ public class Cifrado {
             cipher.init(Cipher.DECRYPT_MODE, clavePrivada);
             byte[] mensajeCifrado = msg.getBytes();
             // Se obtiene el mensaje descifrado
-            byte[] mensaje = cipher.doFinal(Base64.getDecoder().decode(mensajeCifrado));
+            byte[] mensaje = cipher.doFinal(mensajeCifrado);
             // Lo imprimimos por pantalla.
             System.out.println(new String(mensaje));
         } catch (NoSuchPaddingException e) {
@@ -73,6 +91,11 @@ public class Cifrado {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Método con el que generamos un par de claves a partir de un algoritmo.
+     * @return Devolvemos el par de claves generado.
+     */
     public static KeyPair generarClaves() {
         KeyPairGenerator generador;
         KeyPair claves = null;
@@ -87,6 +110,12 @@ public class Cifrado {
             return claves;
         }
     }
+
+    /**
+     * Método para escribir la clave pública del par de claves pasado por parámetro en el fichero de clave pública
+     * y la clave privada del par de claves en el fichero de clave privada.
+     * @param claves
+     */
     public static void guardarClaves(KeyPair claves) {
         try {
             FileOutputStream fos = new FileOutputStream(clavePublica);
@@ -102,6 +131,11 @@ public class Cifrado {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Este método se encarga de generar una clave pública a partir de un fichero.
+     * @return Se devuelve la clave pública creada.
+     */
     public static PublicKey getClavePublica() {
         File ficheroClavePublica = new File(clavePublica);
         PublicKey clavePublica = null;
@@ -120,6 +154,11 @@ public class Cifrado {
             return clavePublica;
         }
     }
+
+    /**
+     * Método que genera una clave privada utilizando un fichero.
+     * @return Devolvemos la clave privada generada.
+     */
     public static PrivateKey getClavePrivada() {
         File ficheroClavePrivada = new File(clavePrivada);
         PrivateKey clavePrivada = null;

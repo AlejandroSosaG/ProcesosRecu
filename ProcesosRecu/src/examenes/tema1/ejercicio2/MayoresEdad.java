@@ -13,11 +13,8 @@ public class MayoresEdad {
         // Línea que contendrá los datos de un línea.
         // La voy a ir leyendo de la entrada estándar
         String linea;
-        File file = new File(args[0]);
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
         // Creo el Scanner para leer de la entrada estándar
-        Scanner sc = new Scanner(br);
+        Scanner sc = new Scanner(System.in);
         // Mientras haya líneas que leer seguiremos leyendo
         while (sc.hasNextLine()) {
             linea = sc.nextLine();

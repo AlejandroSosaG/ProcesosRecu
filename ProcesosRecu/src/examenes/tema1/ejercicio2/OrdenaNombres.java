@@ -16,20 +16,20 @@ public class OrdenaNombres {
         // Línea que contendrá los datos de un línea.
         // La voy a ir leyendo de la entrada estándar
         String linea;
-        File file = new File(args[0]);
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
         // Creo el Scanner para leer de la entrada estándar
-        Scanner sc = new Scanner(br);
-        String[] line = new String[2];
+        Scanner sc = new Scanner(System.in);
+        String[] line;
+        List<String> lista = new ArrayList<>();
         // Mientras haya líneas que leer seguiremos leyendo
         while (sc.hasNextLine()) {
             linea = sc.nextLine();
             line = linea.split(",");
-            String nombre = line[1];
-            line[1] = line[0];
-            line[0] = nombre;
-            System.out.println(line[0] + " " + line[1]);
+            String nombre = line[1] + " " + line[0];
+            lista.add(nombre);
+        }
+        lista.sort(null);
+        for (String i:lista) {
+            System.out.println(i);
         }
         sc.close();
     }

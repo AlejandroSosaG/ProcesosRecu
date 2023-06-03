@@ -25,9 +25,11 @@ public class OrdenaNombres {
         // Mientras haya líneas que leer seguiremos leyendo
         while (sc.hasNextLine()) {
             linea = sc.nextLine();
-            line = linea.split(";");
-            String[] nombre = line[0].split(",");
-            System.out.println(nombre[1] + " " + nombre[0]);
+            line = linea.split(",");
+            String nombre = line[1];
+            line[1] = line[0];
+            line[0] = nombre;
+            System.out.println(line[0] + " " + line[1]);
         }
         sc.close();
     }

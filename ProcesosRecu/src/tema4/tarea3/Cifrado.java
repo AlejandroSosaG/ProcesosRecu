@@ -54,10 +54,9 @@ public class Cifrado {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
-        }finally {
-            // Devolvemos el mensaje cifrado.
-            return new String(mensajeCifrado);
         }
+        // Devolvemos el mensaje cifrado.
+        return new String(mensajeCifrado);
     }
 
     /**
@@ -103,9 +102,8 @@ public class Cifrado {
         } catch (NoSuchAlgorithmException e) {
             System.err.println("No existe el algoritmo especificado");
             e.printStackTrace();
-        }finally {
-            return claves;
         }
+        return claves;
     }
 
     /**
@@ -147,9 +145,8 @@ public class Cifrado {
             e.printStackTrace();
         } catch (InvalidKeySpecException e) {
             e.printStackTrace();
-        }finally {
-            return clavePublica;
         }
+        return clavePublica;
     }
 
     /**

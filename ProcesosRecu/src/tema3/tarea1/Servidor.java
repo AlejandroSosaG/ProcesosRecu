@@ -5,7 +5,7 @@ import java.net.*;
 
 public class Servidor {
     public static void main(String[] args) {
-        String contenido = null; // Esta variable guardará la información que pasa el cliente.
+        String contenido = ""; // Esta variable guardará la información que pasa el cliente.
         System.out.println("Sevidor: Abriendo conexión");
         // Creamos un objeto de tipo servidor.
         ServerSocket socketServidor;
@@ -29,7 +29,7 @@ public class Servidor {
             br = new BufferedReader(fr);
             String linea; // En esta variable donde introduciremos el mensaje línea por línea.
             // Mientras el lector no termine de leer el archvo guardaremos cada línea en la variable contenido.
-            while ((linea = br.readLine())!=null) contenido += linea;
+            while ((linea = br.readLine())!=null) contenido += ("\n" + linea);
             System.out.println("Sevidor envia mensaje al cliente");
             // Creamos objetos de tipo escritura.
             OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");

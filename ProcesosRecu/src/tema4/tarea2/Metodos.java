@@ -10,7 +10,7 @@ public class Metodos {
      * @return Devolvemos la clave.
      */
     public static Key obtenerClave(String contraseña){
-        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 4, "AES");
+        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 10, "AES");
         return clave;
     }
     /**
@@ -44,11 +44,9 @@ public class Metodos {
             throw new RuntimeException(e);
         } catch (InvalidKeyException e) {
             throw new RuntimeException(e);
-        }finally {
-            // Devolvemos el texto cifrado.
-            return cifrado;
         }
-
+        // Devolvemos el texto cifrado.
+        return cifrado;
     }
     /**
      * Método que se encarga de descifrar la cadena pasada por parámetro usando la clave también pasada.
@@ -78,9 +76,8 @@ public class Metodos {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
-        }finally {
-            // Devolvemos el texto descifrado.
-            return descifrado;
         }
+        // Devolvemos el texto descifrado.
+        return descifrado;
     }
 }

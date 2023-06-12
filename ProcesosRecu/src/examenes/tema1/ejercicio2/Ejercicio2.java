@@ -20,6 +20,7 @@ public class Ejercicio2 {
         try {
             // Lanzamos los procesos.
             ProcessBuilder.startPipeline(lpb);
+            System.out.println("El programa se ha ejecutado correctamente.");
         } catch (IOException e) {
             e.printStackTrace();
         }

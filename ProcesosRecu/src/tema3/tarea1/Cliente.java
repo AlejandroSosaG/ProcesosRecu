@@ -10,7 +10,7 @@ public class Cliente {
         Scanner sc = new Scanner(System.in);
         System.out.println("Introduzca la ruta completa del fichero a leer");
         // Creamos una variable donde guardamos la ruta del fichero.
-        String ruta = sc.next();
+        String ruta = sc.nextLine();
         // Creamos un objeto de tipo dirección donde guardaremos la dirección IP local.
         InetAddress direccion;
         try {
@@ -31,7 +31,8 @@ public class Cliente {
             // Creamos opbjetos de tipo lectura que utilizaremos para leer la respuesta del servidor.
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
             BufferedReader br = new BufferedReader(isr);
-            System.out.println("Contenido del fichero: " + br.readLine());
+            String contenido = br.readLine();
+            System.out.println("Contenido del fichero: " + contenido);
             // Cerramos los objetos creados anteriormente.
             osw.close();
             is.close();

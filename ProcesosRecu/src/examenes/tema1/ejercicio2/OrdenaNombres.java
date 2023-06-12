@@ -27,7 +27,7 @@ public class OrdenaNombres {
             String nombre = line[1] + " " + line[0];
             lista.add(nombre);
         }
-        lista.sort(null);
+        Collections.sort(lista);
         for (String i:lista) {
             System.out.println(i);
         }

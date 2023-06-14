@@ -4,15 +4,17 @@ import java.util.*;
 public class GestorHojas extends Thread {
     // Creación de una lista de tipo cadena.
     private static List<String> lista = new ArrayList<>();
+    private static List<String> list = Collections.synchronizedList(lista);
     @Override
     public void run() {
         // Recorremos el bucle 10 veces para llenar la lista de 10 cadenas.
         for (int i = 0; i < 10; i++) {
-            lista.add(new String("Texto " + i));
+            list.add(new String("Texto " + i));
         }
-        // Recorrems la lista y mostramos su contenido.
-        for (String string : lista) {
-            System.out.println(string);
+        synchronized (list){
+            for (String i:list) {
+                System.out.println(i);
+            }
         }
     }
     public static void main(String[] args) {
@@ -23,4 +25,3 @@ public class GestorHojas extends Thread {
         }
     }
 }
-    

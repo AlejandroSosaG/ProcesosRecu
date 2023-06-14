@@ -8,7 +8,7 @@ import java.security.*;
 import java.security.spec.*;
 import java.util.*;
 
-public class Cifrado {
+public class Claves {
     // Creamos dos cadenas estáticas que utilizaremos como claves.
     private static final String clavePublica = "ProcesosRecu/src/tema4/tarea3/clavePublica.key";
     private static final String clavePrivada = "ProcesosRecu/src/tema4/tarea3/clavePrivada.key";
@@ -17,47 +17,11 @@ public class Cifrado {
         KeyPair claves = generarClaves();
         // Llamamos al método guardarClaves pasándole claves por parámetro.
         guardarClaves(claves);
-        // Pedimos al usuario un mensaje para encriptar y desencriptar.
-        System.out.println("Introduzca el mensaje");
-        Scanner sc = new Scanner(System.in);
-        String msg = sc.nextLine();
-        // Guardamos la devolución de cifrar en la variable msgCifrado.
-        String msgCifrado = cifrar(msg);
-        // Mostramos por pantalla el mensaje encriptado.
-        System.out.println(msgCifrado);
-        System.out.println();
         // Llamamos al método descifrar al que le pasamos msgCifrado como parámetro.
         descifrar(msgCifrado);
     }
 
-    /**
-     * Método que se encarga de cifrar el mensaje que le pasamos por parámetro.
-     * @param msg
-     * @return Devolvemos el mensaje cifrado.
-     */
-    public static String cifrar(String msg) {
-        PublicKey clavePublica = getClavePublica();
-        byte[] mensajeCifrado = new byte[0];
-        try {
-            Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.ENCRYPT_MODE, clavePublica);
-            byte[] mensaje = msg.getBytes(StandardCharsets.UTF_8);
-            // Se cifra el mensaje.
-            mensajeCifrado = cipher.doFinal(mensaje);
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-        // Devolvemos el mensaje cifrado.
-        return new String(mensajeCifrado);
-    }
+
 
     /**
      * Este método muestra por pantalla el mensaje que se pasa por parámetro una vez descodificado.

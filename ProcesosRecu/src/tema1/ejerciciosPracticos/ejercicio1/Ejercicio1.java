@@ -20,32 +20,40 @@ public class Ejercicio1 {
         System.out.println("3. Mostrar contenido del directorio");
         // Introducimos la opción seleccionada en opc.
         opc = sc.nextInt();
-        // Pedimos la ruta.
-        System.out.println("Introduzca la ruta:");
-        // Introducimos el valor en la variable ruta.
-        ruta = sc.next();
         // Según la opción introducida debemos lanzar un proceso u otro.
         switch (opc) {
             // Si elige crear una carpeta, debo pedirle también el nombre de la carpeta a crear.
             case 1:
-                System.out.println("Introduzca el nombre de la carpeta que quiere crear");
-                String carpeta = sc.next();
-                comando = new String[]{"cmd", "/C", "md", ruta + carpeta};
+                //Le pedimos al usuario que introduzca la ruta completa de la carpeta que quiere crear.
+                System.out.println("Introduzca la ruta completa de la carpeta que desea crear");
+                ruta = sc.next();
+                sc.nextLine();
+                // Declaramos la variable comando donde guardamos el comando para crear la carpeta.
+                comando = new String[]{"cmd", "/C", "md", ruta};
                 crear(comando); // Llamamos al metodo crear.
                 break;
             // Si elige crear un fichero, debo pedirle también el nombre del fichero a crear.
             case 2:
+                // Pedimos la ruta.
+                System.out.println("Introduzca la ruta");
+                // Introducimos el valor en la variable ruta.
+                ruta = sc.next();
+                sc.nextLine();
                 System.out.println("Introduzca el nombre del fichero que quiere crear");
-                String fichero = sc.next();
-                comando = new String[]{"cmd", "/C", "type", "nul", ">", ruta + fichero};
+                String fichero = sc.nextLine();
+                comando = new String[]{"cmd", "/C", "type", "nul", ">", ruta + "\\" + fichero};
                 crear(comando); // Llamamos al método crear.
                 break;
                 // Si elije mostrar contenido creamos la ruta que queremos utilizar y mostramos por
                 // pantalla el contenido del diretorio.
             case 3:
+                // Pedimos la ruta.
+                System.out.println("Introduzca la ruta");
+                // Introducimos el valor en la variable ruta.
+                ruta = sc.next();
+                sc.nextLine();
                 comando = new String[]{"cmd", "/C", "dir", ruta};
-                ProcessBuilder pb = new ProcessBuilder(comando);
-                pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                crear(comando);
                 break;
                 // Si no elige una opción valida se lo hacemos saber.
             default:
@@ -60,7 +68,10 @@ public class Ejercicio1 {
         try {
             // Lanzamos el proceso.
             Process p = pb.start();
+            p.waitFor();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

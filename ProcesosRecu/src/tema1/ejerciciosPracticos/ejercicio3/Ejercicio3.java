@@ -6,15 +6,15 @@ public class Ejercicio3 {
     public static void main(String[] args) {
         // Creamos las rutas de los procesos que queremos lanzar pasándoles la letra a utilizar y tambien
         // creamos los lanzadores, les añadimos las rutas de los procesos.
-        String[] comando1 = {"java", "CuentaCaracteres", "a"};
+        String[] comando1 = {"java", "ProcesosRecu/src/tema1/ejerciciosPracticos/ejercicio3/CuentaCaracteres.java", "a"};
         ProcessBuilder pb1 = new ProcessBuilder(comando1);
-        String[] comando2 = {"java", "CuentaCaracteres", "e"};
+        String[] comando2 = {"java", "ProcesosRecu/src/tema1/ejerciciosPracticos/ejercicio3/CuentaCaracteres.java", "e"};
         ProcessBuilder pb2 = new ProcessBuilder(comando2);
-        String[] comando3 = {"java", "CuentaCaracteres", "i"};
+        String[] comando3 = {"java", "ProcesosRecu/src/tema1/ejerciciosPracticos/ejercicio3/CuentaCaracteres.java", "i"};
         ProcessBuilder pb3 = new ProcessBuilder(comando3);
-        String[] comando4 = {"java", "CuentaCaracteres", "o"};
+        String[] comando4 = {"java", "ProcesosRecu/src/tema1/ejerciciosPracticos/ejercicio3/CuentaCaracteres.java", "o"};
         ProcessBuilder pb4 = new ProcessBuilder(comando4);
-        String[] comando5 = {"java", "CuentaCaracteres", "u"};
+        String[] comando5 = {"java", "ProcesosRecu/src/tema1/ejerciciosPracticos/ejercicio3/CuentaCaracteres.java", "u"};
         ProcessBuilder pb5 = new ProcessBuilder(comando5);
         // Les decimos a los lanzadores que muestren las entrada, salida y error por pantalla..
         pb1.inheritIO();

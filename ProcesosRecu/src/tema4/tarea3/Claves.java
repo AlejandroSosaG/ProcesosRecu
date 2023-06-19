@@ -10,48 +10,18 @@ import java.util.*;
 
 public class Claves {
     // Creamos dos cadenas estáticas que utilizaremos como claves.
-    private static final String clavePublica = "ProcesosRecu/src/tema4/tarea3/clavePublica.key";
-    private static final String clavePrivada = "ProcesosRecu/src/tema4/tarea3/clavePrivada.key";
+    public static final String clavePublicaEncriptado = "ProcesosRecu/src/tema4/tarea3/clavePublicaEncriptado.key";
+    public static final String clavePublicadesencriptado = "ProcesosRecu/src/tema4/tarea3/clavePublicaDesencriptado.key";
+    public static final String clavePrivadaEncriptado = "ProcesosRecu/src/tema4/tarea3/clavePrivadaEncriptado.key";
+    public static final String clavePrivadadesencriptado = "ProcesosRecu/src/tema4/tarea3/clavePrivadaDesencriptado.key";
     public static void main(String[] args) {
         // Guardamos la devolución de generarClaves en el objeto claves.
         KeyPair claves = generarClaves();
         // Llamamos al método guardarClaves pasándole claves por parámetro.
-        guardarClaves(claves);
-        // Llamamos al método descifrar al que le pasamos msgCifrado como parámetro.
-        descifrar(msgCifrado);
+        guardarClavesEncriptado(claves);
+        claves = generarClaves();
+        guardarClavesDesencriptado(claves);
     }
-
-
-
-    /**
-     * Este método muestra por pantalla el mensaje que se pasa por parámetro una vez descodificado.
-     * @param msg
-     */
-    public static void descifrar(String msg) {
-        // Creamos una clave privada.
-        PrivateKey clavePrivada = getClavePrivada();
-        try {
-            Cipher cipher = Cipher.getInstance("RSA");
-            // Desciframos con la clave privada
-            cipher.init(Cipher.DECRYPT_MODE, clavePrivada);
-            byte[] mensajeCifrado = msg.getBytes();
-            // Se obtiene el mensaje descifrado
-            byte[] mensaje = cipher.doFinal(mensajeCifrado);
-            // Lo imprimimos por pantalla.
-            System.out.println(new String(mensaje));
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Método con el que generamos un par de claves a partir de un algoritmo.
      * @return Devolvemos el par de claves generado.
@@ -69,18 +39,37 @@ public class Claves {
         }
         return claves;
     }
-
     /**
      * Método para escribir la clave pública del par de claves pasado por parámetro en el fichero de clave pública
      * y la clave privada del par de claves en el fichero de clave privada.
      * @param claves
      */
-    public static void guardarClaves(KeyPair claves) {
+    public static void guardarClavesEncriptado(KeyPair claves) {
         try {
-            FileOutputStream fos = new FileOutputStream(clavePublica);
+            FileOutputStream fos = new FileOutputStream(clavePublicaEncriptado);
             fos.write(claves.getPublic().getEncoded());
             fos.flush();
-            fos = new FileOutputStream(clavePrivada);
+            fos = new FileOutputStream(clavePrivadaEncriptado);
+            fos.write(claves.getPrivate().getEncoded());
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Método para escribir la clave pública del par de claves pasado por parámetro en el fichero de clave pública
+     * y la clave privada del par de claves en el fichero de clave privada.
+     * @param claves
+     */
+    public static void guardarClavesDesencriptado(KeyPair claves) {
+        try {
+            FileOutputStream fos = new FileOutputStream(clavePublicadesencriptado);
+            fos.write(claves.getPublic().getEncoded());
+            fos.flush();
+            fos = new FileOutputStream(clavePrivadadesencriptado);
             fos.write(claves.getPrivate().getEncoded());
             fos.flush();
             fos.close();
@@ -95,8 +84,8 @@ public class Claves {
      * Este método se encarga de generar una clave pública a partir de un fichero.
      * @return Se devuelve la clave pública creada.
      */
-    public static PublicKey getClavePublica() {
-        File ficheroClavePublica = new File(clavePublica);
+    public static PublicKey getClavePublica(String clave) {
+        File ficheroClavePublica = new File(clave);
         PublicKey clavePublica = null;
         try {
             byte[] bytesPublica = Files.readAllBytes(ficheroClavePublica.toPath());
@@ -117,8 +106,8 @@ public class Claves {
      * Método que genera una clave privada utilizando un fichero.
      * @return Devolvemos la clave privada generada.
      */
-    public static PrivateKey getClavePrivada() {
-        File ficheroClavePrivada = new File(clavePrivada);
+    public static PrivateKey getClavePrivada(String clave) {
+        File ficheroClavePrivada = new File(clave);
         PrivateKey clavePrivada = null;
         try {
             byte[] bytesPrivada = Files.readAllBytes(ficheroClavePrivada.toPath());

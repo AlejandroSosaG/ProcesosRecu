@@ -6,17 +6,15 @@ import java.security.*;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
-public class Encriptar {
+public class Encriptado {
     public static void main(String[] args) {
-        PublicKey clavePublica = Claves.getClavePublica();
-        PrivateKey clavePrivada = Claves.getClavePrivada();
         // Pedimos al usuario un mensaje para encriptar.
         System.out.println("Introduzca el mensaje que desea cifrar");
         Scanner sc = new Scanner(System.in);
         String msg = sc.nextLine();
         byte[] mensaje = msg.getBytes();
         // Guardamos la devolución de cifrar en la variable msgCifrado.
-        byte[] msgCifrado = cifrar(mensaje, clavePublica, clavePrivada);
+        byte[] msgCifrado = cifrar(mensaje);
         // Mostramos por pantalla el mensaje encriptado.
         System.out.println("Mensaje cifrado: " + Base64.getEncoder().encodeToString(msgCifrado));
     }
@@ -26,8 +24,10 @@ public class Encriptar {
      * @param msg
      * @return Devolvemos el mensaje cifrado.
      */
-    public static byte[] cifrar(byte[] msg, PublicKey clavePublica, PrivateKey clavePrivada) {
+    public static byte[] cifrar(byte[] msg) {
         byte[] mensajeCifrado = new byte[0];
+        PublicKey clavePublica = Claves.getClavePublica(Claves.clavePublicaEncriptado);
+        PrivateKey clavePrivada = Claves.getClavePrivada(Claves.clavePrivadaEncriptado);
         try {
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             cipher.init(Cipher.ENCRYPT_MODE, clavePrivada);

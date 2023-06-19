@@ -1,53 +1,69 @@
 package tema3.tarea1;
 
 import java.io.*;
-import java.net.*;
-
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
 public class Servidor {
     public static void main(String[] args) {
-        String contenido = ""; // Esta variable guardará la información que pasa el cliente.
-        System.out.println("Sevidor: Abriendo conexión");
-        // Creamos un objeto de tipo servidor.
-        ServerSocket socketServidor;
+        String ruta = "";
+        String mensaje;
         try {
-            // Le introducimos al servidor un número de puerto.
-            socketServidor = new ServerSocket(1500);
-            System.out.println("Sevidor: aceptando conexión");
-            // Creamos un objeto de tipo socket y aceptamos la conexión con el servidor.
-            Socket socketCliente = socketServidor.accept();
-            System.out.println("Sevidor: Abriendo flujos de entrada y salida");
-            // Creamos objetos de tipos entrada, salida y lectores.
-            InputStream is = socketCliente.getInputStream();
-            OutputStream os = socketCliente.getOutputStream();
-            InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            BufferedReader br = new BufferedReader(isr);
-            // Creamos una variable donde guardamos la ruta del archivo a leer.
-            String ruta = br.readLine();
-            // Creamos un archivo y un lector para la ruta que nos pasa el cliente.
-            File archivo = new File (ruta);
-            FileReader fr = new FileReader (archivo);
-            br = new BufferedReader(fr);
-            String linea; // En esta variable donde introduciremos el mensaje línea por línea.
-            // Mientras el lector no termine de leer el archvo guardaremos cada línea en la variable contenido.
-            while ((linea = br.readLine())!=null) contenido += ("\n" + linea);
-            System.out.println("Sevidor envia mensaje al cliente");
-            // Creamos objetos de tipo escritura.
-            OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
-            BufferedWriter bw = new BufferedWriter(osw);
-            // Enviamos al cliente el contenido del fichero.
-            bw.write(contenido);
-            bw.newLine();
-            bw.flush();
-            // Cerramos los objetos creados anteriormente.
-            fr.close();
-            br.close();
-            isr.close();
-            is.close();
-            os.close();
-            socketCliente.close();
-            socketServidor.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            // Creación del socket servidor.
+            System.out.println("(Servidor): Abriendo conexión...");
+            ServerSocket socketServidor = new ServerSocket(1500);
+            while (true) {
+                // Esperamos y aceptamos conexiones.
+                System.out.println("(Servidor): Esperando peticiones...");
+                Socket socketCliente = socketServidor.accept();
+                // Abrimos flujos de entrada y salida.
+                System.out.println("(Servidor): Abriendo flujos de entrada y de salida...");
+                InputStream is = socketCliente.getInputStream();
+                OutputStream os = socketCliente.getOutputStream();
+                // Intercambiamos datos con el cliente.
+                System.out.println("(Servidor): Leo mensaje del cliente...");
+                InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+                BufferedReader br = new BufferedReader(isr);
+                OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+                BufferedWriter bw = new BufferedWriter(osw);
+                ruta = br.readLine();
+                mensaje = leeRuta(ruta);
+                System.out.println("(Servidor): Envío mensaje al cliente...");
+                bw.write(mensaje);
+                bw.newLine();
+                bw.flush();
+                // Cerramos los objetos creados.
+                System.out.println("(Servidor): Cierre de flujos de lectura y escritura...");
+                br.close();
+                isr.close();
+                is.close();
+                bw.close();
+                osw.close();
+                os.close();
+    			socketCliente.close();
+                socketServidor.close();
+            }
+        } catch (FileNotFoundException fnfe){
+            System.out.println("ERROR: Fichero no encontrado");
+            fnfe.printStackTrace();
+        }catch (IOException e) {
+            System.err.println("ERROR: Error al crear el socket en el puerto 50000");
+            e.printStackTrace();
         }
+    }
+    public static String leeRuta(String ruta){
+        StringBuilder contenido = new StringBuilder();
+        try {
+            File file = new File(ruta);
+            Scanner sc = new Scanner(file);
+            if (file.exists()) {
+                while (sc.hasNext()){
+                    contenido.append(sc.nextLine()).append(" ");
+                }
+            }
+        }catch (FileNotFoundException e){
+            contenido.append("ERROR: Fichero no encontrado");
+        }
+        return contenido.toString();
     }
 }

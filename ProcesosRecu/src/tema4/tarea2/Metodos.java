@@ -10,7 +10,7 @@ public class Metodos {
      * @return Devolvemos la clave.
      */
     public static Key obtenerClave(String contraseña){
-        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 10, "AES");
+        Key clave = new SecretKeySpec(contraseña.getBytes(), 0, 16, "AES");
         return clave;
     }
     /**

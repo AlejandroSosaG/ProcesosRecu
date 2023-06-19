@@ -1,46 +1,106 @@
 package tema4.tarea3;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.util.Base64;
-
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.security.interfaces.RSAKey;
+import javax.crypto.*;
 public class Desencriptado {
-    public static void main(String[] args) {
-        String msgCifrado = "USXrrCMd1oltVsVTldO/KC5RbSHxU4NIfN3Fk0rlE5WeB50BrS26UUw6LZ9f2J9UZ7Mh4YTPqvL3l74mrouq6LIlERupN9NMtUfOv2OqJOV/WS0/XC6p5Pvoio+DT80Af2PNQ2OVoU3rOu8j2ik0exhoIrx4ETHzo9cU/AK+d5NajPLGCeEZQfyktuDCGrmjoSRTtU8WdYZDuECT9oFYIVbsWLWfilo2Um01rQJBJ501NxLII2492BkNfLywkkkTCRpa0Fab9+u3UNJVxCXFeUwPdr22OP1tCxCt/uXiqo7zc7Px2TCypA27XmUcybc6BSGCrYfLLVe9VFNnFj+r5pxJnDXk/0yoji4MzyVC6bvYYnKP9GHZ/EqND1UyJ8SxjS8t/w2T+mhnX+6t+m9skfjpBkOtHw3o0/L7YzEApj9BOgL+rghzEGYoQvcRxuZnHZCw524YKSGNSSG32GO02qbADTAvO0BVMRW4fAJAc73c4oX2zRnlY4r+IZWutyfvpgk7gC0H15nWBYPfLdvUfFWLDO5ndFtKLjJiF7r178OUQuaY8UK0lB/xW95fzLYGvIzmrSGngO9BRxQLbPaKGwVL4/ADWj+u57ynWabVQ5F1XRBqJ+XY6FNgPuTTwS3qLSkOCW5JrLtnWEppLskDxJtFeNzvyN5WIthQkOShNog=";
-        // Llamamos al método descifrar al que le pasamos msgCifrado como parámetro.
-        descifrar(msgCifrado);
-    }
-    /**
-     * Este método muestra por pantalla el mensaje que se pasa por parámetro una vez descodificado.
-     * @param msg
-     */
-    public static void descifrar(String msg) {
-        // Creamos una clave privada que sacamos de la clase Claves.
-        PrivateKey clavePrivada = Claves.getClavePrivada(Claves.clavePrivadadesencriptado);
+    // Declaramos una constante con la ruta del fichero encriptado
+    public static final String RUTA_FICHERO_ENCRIPTADO = "ProcesosRecu/src/tema4/tarea3/ficheroEncriptado.txt";
+    public static final String RUTA_FICHERO_DESCIFRADO = "ProcesosRecu/src/tema4/tarea3/ficheroDescifrado.txt";
+    public static void descifrarFichero() {
         try {
-            Cipher cipher = Cipher.getInstance("RSA");
-            // Desciframos con la clave privada.
-            cipher.init(Cipher.DECRYPT_MODE, clavePrivada);
-            byte[] mensajeCifrado = Base64.getDecoder().decode(msg);
-            // Se obtiene el mensaje descifrado
-            byte[] mensaje = cipher.doFinal(mensajeCifrado);
-            // Lo imprimimos por pantalla.
-            System.out.println(new String(mensaje));
+            //Declaramos las claves pública y privada
+            PrivateKey clavePrivadaReceptor = ClavesReceptor.getClavePrivada();
+            PublicKey clavePublicaEmisor = ClavesEmisor.getClavePublica();
+            //Declaramos el cifrador con la clave privada del receptor
+            Cipher cipherReceptor = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipherReceptor.init(Cipher.DECRYPT_MODE, clavePrivadaReceptor);
+            //Leemos el fichero encriptado
+            byte[] mensajeCifradoReceptor = leerFichero(RUTA_FICHERO_ENCRIPTADO);
+            //Desciframos el mensaje primero con la clave privada del receptor
+            byte[] mensajeCifradoEmisor = descifrarContenido(mensajeCifradoReceptor, clavePrivadaReceptor);
+            //Luego desciframos con la clave pública del emisor
+            byte[] mensajeDescifrado = descifrarContenido(mensajeCifradoEmisor, clavePublicaEmisor);
+            //Guardamos el mensaje descifrado en un fichero
+            guardarFichero(mensajeDescifrado, RUTA_FICHERO_DESCIFRADO);
+            System.out.println("Mensaje descifrado correctamente");
+            System.out.println();   //Salto de línea estético
+            //Mostramos el mensaje descifrado por pantalla
+            System.out.println("Este es el mensaje secreto: ");
+            System.out.println(new String(mensajeDescifrado, StandardCharsets.UTF_8));
         } catch (NoSuchPaddingException e) {
             e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Método que descifrará el contenido del fichero cifrado por bloques
+     * @param contenidoCifrado Array de bytes que contiene los datos del fichero cifrado
+     * @param clave Clave pública o privada
+     * @return contenido descifrado en un array de bytes
+     */
+    public static byte[] descifrarContenido(byte[] contenidoCifrado, Key clave) throws Exception {
+        // Crear objeto Cipher
+        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+        cipher.init(Cipher.DECRYPT_MODE, clave);
+        // Calcular tamaño del bloque
+        int tamanoBloque = (((RSAKey) clave).getModulus().bitLength() + 7) / 8;
+        // Inicializar buffer de salida
+        ByteArrayOutputStream bufferSalida = new ByteArrayOutputStream();
+        // Descifrar el contenido en bloques
+        int offset = 0;
+        while (offset < contenidoCifrado.length) {
+            int tamanoBloqueActual = Math.min(tamanoBloque, contenidoCifrado.length - offset);
+            byte[] bloqueDescifrado = cipher.doFinal(contenidoCifrado, offset, tamanoBloqueActual);
+            bufferSalida.write(bloqueDescifrado);
+            offset += tamanoBloqueActual;
+        }
+        return bufferSalida.toByteArray();
+    }
+    /**
+     * Método que lee un fichero y lo devuelve como un array de bytes.
+     * @param ruta Ruta del fichero a leer
+     * @return Contenido del fichero en un array de bytes
+     * @throws IOException Si ocurre un error de lectura del fichero
+     */
+    private static byte[] leerFichero(String ruta) throws IOException {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(ruta);
+            return fis.readAllBytes();
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
+    }
+    /**
+     * Método que guarda un array de bytes en un fichero.
+     * @param contenido Array de bytes que se va a guardar en el fichero
+     * @param ruta Ruta del fichero en el que se va a guardar el contenido
+     */
+    private static void guardarFichero(byte[] contenido, String ruta) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(ruta);
+            fos.write(contenido);
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
         }
     }
 }

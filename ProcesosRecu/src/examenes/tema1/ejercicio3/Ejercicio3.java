@@ -1,42 +1,53 @@
 package examenes.tema1.ejercicio3;
 
-import java.io.File;
-import java.io.IOException;
-
+import java.io.*;
+import java.util.*;
 public class Ejercicio3 {
     public static void main(String[] args) {
-        // Creación de comandos y lanzadores.
-        String[] comando = {"java", "ProcesosRecu/src/examenes/tema1/ejercicio3/NumerosAleatorios.java"};
-        ProcessBuilder pb = new ProcessBuilder(comando);
-        String[] comando2 = {"java", "ProcesosRecu/src/examenes/tema1/ejercicio3/SumaNumeros.java"};
-        ProcessBuilder pb2 = new ProcessBuilder(comando2);
-        String[] comando3 = {"java", "ProcesosRecu/src/examenes/tema1/ejercicio3/MediaNumeros.java"};
-        ProcessBuilder pb3 = new ProcessBuilder(comando3);
-        try {
-            /**
-             * Recorremos el bucle 10 veces.
-             */
-            for (int i = 0; i < 11; i++) {
-                // Ponemos la salida del primer proceso en el archivo escrito.
-                pb.redirectOutput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random" + i + ".txt"));
-                // Ponemos la entrada del segundo proceso en el archivo escrito.
-                pb2.redirectInput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random" + i + ".txt"));
-                // Ponemos la salida del segundo proceso en el archivo escrito sin borrar lo que hay en él.
-                pb2.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/sumas.txt")));
-                // Ponemos la entrada del tercer proceso en el archivo escrito.
-                pb3.redirectInput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random" + i + ".txt"));
-                // Ponemos la salida del tercer proceso en el archivo escrito sin borrar lo que hay en él.
-                pb3.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/medias.txt")));
-                // Lanzamos los procesos esperando a que termine de ejecutarse el primero.
-                Process p = pb.start();
-                p.waitFor();
-                Process p2 = pb2.start();
-                Process p3 = pb3.start();
+        // Declarmaos las varaibles.
+        int numero = 1;    // Variable que nos servirá para contar el numero de procesos.
+        String [] comando1 = {"Java", "ProcesosRecu/src/examenes/tema1/ejercicio3/NumerosAleatorios.java"};
+        List<Process> listaProcesos = new ArrayList<>();
+        ProcessBuilder pb1 = new ProcessBuilder(comando1);
+        pb1.redirectError(ProcessBuilder.Redirect.INHERIT);
+        for (int i = 0; i < 10; i++) {
+            pb1.redirectOutput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random"+i+".txt"));
+            Process p = null;
+            try {
+                p = pb1.start();
+            } catch (IOException e) {
+                System.err.println("Error durante la ejecución del proceso");
+                System.err.println(e.getLocalizedMessage());
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            listaProcesos.add(p);
+            numero++;
         }
+        while (numero > 0) {
+            numero = 10;
+            for (Process proceso : listaProcesos) {
+                if(!proceso.isAlive()) {
+                    numero--;
+                }
+            }
+        }
+        for (int i = 0; i < 10; i++) {
+            String numFichero = String.valueOf(i);
+            String [] comando2 = {"java", "ProcesosRecu/src/examenes/tema1/ejercicio3/SumaNumeros.java", numFichero};
+            String [] comando3 = {"java", "ProcesosRecu/src/examenes/tema1/ejercicio3/MediaNumeros.java", numFichero};
+            ProcessBuilder pb2 = new ProcessBuilder(comando2);
+            ProcessBuilder pb3 = new ProcessBuilder(comando3);
+            pb2.redirectInput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random" + i + ".txt"));
+            pb2.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/sumas.txt")));
+            pb3.redirectInput(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/random" + i + ".txt"));
+            pb3.redirectOutput(ProcessBuilder.Redirect.appendTo(new File("ProcesosRecu/src/examenes/tema1/ejercicio3/medias.txt")));
+            try {
+                pb2.start();
+                pb3.start();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("El proceso ha finalizado correctamente");
     }
 }

@@ -36,11 +36,10 @@ public class Filosofo extends Thread{
             this.mesa.cogerTenedores(this.indiceComensal);
             this.comiendo();
             // Mostramos un mensaje por pantalla que diga el filósofo que termina de comer y los tenedores que deja libres.
-            System.out.println("Filosofo " + comensal +  " deja de comer, tenedores libres: " + (this.mesa.tenedorIzquierda(this.indiceComensal) + 1) + ", " + (this.mesa.tenedorDerecha(this.indiceComensal) + 1) );
             this.mesa.dejarTenedores(this.indiceComensal);
+            System.out.println("Filosofo " + comensal +  " deja de comer, tenedores libres: " + (this.mesa.tenedorIzquierda(this.indiceComensal) + 1) + ", " + (this.mesa.tenedorDerecha(this.indiceComensal) + 1) );
         }
     }
-
     /**
      * Método que muestra un mensaje diciendo que el filósofo está pensando y espera un tiempo aleatorio
      * de hasta 5 segundos.
@@ -58,7 +57,7 @@ public class Filosofo extends Thread{
      * Método que dice el filósofo que está pensando y que espera una cantidad aleatoria de hasta 5 segundos.
      */
     public void comiendo(){
-        System.out.println("Filosofo " + comensal + " esta comiendo");
+        System.out.println("Filosofo " + comensal + " esta comiendo con los tenedores "  + (this.mesa.tenedorIzquierda(this.indiceComensal) + 1) + " y " + (this.mesa.tenedorDerecha(this.indiceComensal) + 1) );
         try {
             this.sleep((long) (Math.random()*5000));
         } catch (InterruptedException e) {

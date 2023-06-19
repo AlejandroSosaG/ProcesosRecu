@@ -15,7 +15,7 @@ public class Mesa {
         if(i == 0){
             return this.tenedores.length - 1;
         }else{
-            return i - 1;
+            return i + 1;
         }
     }
     /**

@@ -16,7 +16,7 @@ public class Libro {
 	/**
 	 * Método que se encarga de bloquear dos libros mientras se están usando.
 	 */
-	public synchronized void reservaLibros() {
+	public void reservaLibros() {
 		while (libros[libro1] == true || libros[libro2] == true) {
 			if (libros[libro1] == true){
 				while (libro2 == libro1) {
@@ -37,9 +37,8 @@ public class Libro {
 	/**
 	 * Este método se encarga de liberar los libros bloqueados por los alumnos.
 	 */
-	public synchronized void liberaLibros() {
+	public void liberaLibros() {
 		libros[libro1] = false;
 		libros[libro2] = false;
-		this.notifyAll();
 	}
 }

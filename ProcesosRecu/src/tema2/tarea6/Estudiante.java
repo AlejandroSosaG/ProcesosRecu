@@ -16,7 +16,6 @@ public class Estudiante implements Runnable {
             hilo.start();
         }
     }
-
     @Override
     public void run() {
         try {
